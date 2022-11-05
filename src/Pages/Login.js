@@ -1,10 +1,15 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import LoginImg from "../assets/images/login/login.svg";
 import { AuthContext } from "../contexts/AuthProvider/AuthProvider";
 
 const Login = () => {
   const { login } = useContext(AuthContext);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+
   //submit form
   const handleLogin = (event) => {
     event.preventDefault();
@@ -14,9 +19,34 @@ const Login = () => {
 
     login(email, password)
       .then((result) => {
-        console.log(result.user);
+        const user = result.user;
+        console.log(result.user.email);
+        const currentUser = {
+          email: user.email,
+        };
+
+        console.log(currentUser);
+
+        // get jwt token
+        fetch("http://localhost:5000/jwt", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(currentUser),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+
+            //ca; storage is not the best place to store jwt token
+
+            localStorage.setItem("geniusToken", data.token);
+            form.reset();
+            navigate(from, { replace: true });
+          });
       })
-      .then((error) => console.log(error));
+      .catch((error) => console.log(error));
   };
 
   return (
@@ -43,7 +73,8 @@ const Login = () => {
                   </span>
                 </label>
                 <input
-                  type="text"
+                  type="email"
+                  name="email"
                   placeholder="Your email"
                   className="input input-bordered h-[60px] rounded-[10px] border-[#E8E8E8]"
                 />
@@ -55,7 +86,8 @@ const Login = () => {
                   </span>
                 </label>
                 <input
-                  type="text"
+                  type="password"
+                  name="password"
                   placeholder="Your password"
                   className="input input-bordered h-[60px] rounded-[10px] border-[#E8E8E8]"
                 />

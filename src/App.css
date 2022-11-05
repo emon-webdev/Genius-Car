@@ -8,10 +8,11 @@
   margin-right: auto;
   margin-left: auto;
 } */
+button:focus,
 a:focus,
 a:active {
   background: none;
-  color: none;
+  color: rgb(255, 56, 17);
 }
 
 /* Services */

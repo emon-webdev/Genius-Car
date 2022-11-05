@@ -1,8 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, NavLink } from "react-router-dom";
 import navLogo from "../../assets/logo.svg";
+import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 
 const Header = () => {
+  const { user, logOut } = useContext(AuthContext);
+
+//log out
+const handleLogOut = () => {
+  logOut()
+  .then()
+  .catch()
+};
+
+
   let activeClass = {
     color: "#FF3811",
     background: "none",
@@ -33,14 +44,31 @@ const Header = () => {
           Services
         </NavLink>
       </li>
-      <li>
-        <NavLink
-          to="/login"
-          style={({ isActive }) => (isActive ? activeClass : undefined)}
-        >
-          Login
-        </NavLink>
-      </li>
+
+      {user?.email ? (
+        <>
+          <li>
+            <NavLink
+              to="/orders"
+              style={({ isActive }) => (isActive ? activeClass : undefined)}
+            >
+              Orders
+            </NavLink>
+          </li>
+          <li>
+            <button onClick={handleLogOut}>Sign Out</button>
+          </li>
+        </>
+      ) : (
+        <li>
+          <NavLink
+            to="/login"
+            style={({ isActive }) => (isActive ? activeClass : undefined)}
+          >
+            Login
+          </NavLink>
+        </li>
+      )}
     </>
   );
 
