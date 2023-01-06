@@ -6,6 +6,11 @@ const Orders = () => {
   const { user, logout } = useContext(AuthContext);
   const [orders, setOrders] = useState([]);
   useEffect(() => {
+    // fetch(`http://localhost:5000/orders?email=${user?.email}`, {
+    //   headers: {
+    //     authorization: `Bearer ${localStorage.getItem("geniusToken")}`,
+    //   },
+    // })
     fetch(`http://localhost:5000/orders?email=${user?.email}`, {
       headers: {
         authorization: `Bearer ${localStorage.getItem("geniusToken")}`,
@@ -13,23 +18,29 @@ const Orders = () => {
     })
       .then((res) => {
         if (res.status === 401 || res.status === 403) {
-         return logout();
+          return logout();
         }
         return res.json();
       })
       .then((data) => {
+        console.log("inside recived", data);
         setOrders(data);
       });
   }, [user?.email, logout]);
 
+  console.log(orders);
+
   const handleDelete = (id) => {
-    const proceed = window.confirm("Are you sure, you want ");
+    const proceed = window.confirm(
+      "Are you sure you want to cancel this order"
+    );
     if (proceed) {
       fetch(`http://localhost:5000/orders/${id}`, {
         method: "DELETE",
       })
         .then((res) => res.json())
         .then((data) => {
+          console.log(data);
           if (data.deletedCount > 0) {
             alert("deleted successfully");
             const remaining = orders.filter((odr) => odr._id !== id);
@@ -42,7 +53,7 @@ const Orders = () => {
   const handleStatusUpdate = (id) => {
     fetch(`http://localhost:5000/orders/${id}`, {
       method: "PATCH",
-      Headers: {
+      headers: {
         "content-type": "application/json",
       },
       body: JSON.stringify({ status: "Approved" }),
@@ -50,7 +61,8 @@ const Orders = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        if (data.modifiedCOunt > 0) {
+        if (data.modifiedCount > 0) {
+          console.log(data);
           const remaining = orders.filter((odr) => odr._id !== id);
           const approving = orders.find((odr) => odr._id === id);
           approving.status = "Approved";
@@ -59,6 +71,27 @@ const Orders = () => {
         }
       });
   };
+
+  // const handleStatusUpdate = (id) => {
+  //   fetch(`http://localhost:5000/orders/${id}`, {
+  //     method: "PATCH",
+  //     Headers: {
+  //       "content-type": "application/json",
+  //     },
+  //     body: JSON.stringify({ status: "Approved" }),
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       console.log(data);
+  //       if (data.modifiedCOunt > 0) {
+  //         const remaining = orders.filter((odr) => odr._id !== id);
+  //         const approving = orders.find((odr) => odr._id === id);
+  //         approving.status = "Approved";
+  //         const newOrders = [approving, ...remaining];
+  //         setOrders(newOrders);
+  //       }
+  //     });
+  // };
 
   return (
     <div>

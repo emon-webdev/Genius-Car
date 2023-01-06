@@ -52,11 +52,13 @@ const Checkout = () => {
           <input
             type="text"
             name="firstName"
+            required
             placeholder="First Name"
             className="input input-bordered input-primary w-full md:max-w-[460px] h-[60px]"
           />
           <input
             type="text"
+            required
             name="lastName"
             placeholder="Last Name"
             className="input input-bordered input-primary w-full md:max-w-[460px] h-[60px]"
@@ -92,7 +94,7 @@ const Checkout = () => {
         <input
           type="submit"
           value="Order Confirm"
-          class="border text-center cursor-pointer border-[#FF3811] bg-[#FF3811] w-full h-[56px] rounded-[5px] text-white font-semibold hover:border-[#FF3811] hover:bg-transparent hover:text-[#FF3811] hover:duration-1650"
+          className="border text-center cursor-pointer border-[#FF3811] bg-[#FF3811] w-full h-[56px] rounded-[5px] text-white font-semibold hover:border-[#FF3811] hover:bg-transparent hover:text-[#FF3811] hover:duration-1650"
         />
       </form>
     </div>

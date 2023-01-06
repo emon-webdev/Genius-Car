@@ -2,9 +2,10 @@ import React, { useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import LoginImg from "../assets/images/login/login.svg";
 import { AuthContext } from "../contexts/AuthProvider/AuthProvider";
+import SocialLogin from "./SocialLogin";
 
 const Login = () => {
-  const { login } = useContext(AuthContext);
+  const { login, googleSignIn } = useContext(AuthContext);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,14 +21,13 @@ const Login = () => {
     login(email, password)
       .then((result) => {
         const user = result.user;
-        console.log(result.user.email);
+
         const currentUser = {
           email: user.email,
         };
-
         console.log(currentUser);
 
-        // get jwt token
+        //get jwt token
         fetch("http://localhost:5000/jwt", {
           method: "POST",
           headers: {
@@ -38,15 +38,38 @@ const Login = () => {
           .then((res) => res.json())
           .then((data) => {
             console.log(data);
-
-            //ca; storage is not the best place to store jwt token
-
             localStorage.setItem("geniusToken", data.token);
-            form.reset();
             navigate(from, { replace: true });
           });
+
+        // get jwt token
+        // fetch("http://localhost:5000/jwt", {
+        //   method: "POST",
+        //   headers: {
+        //     "content-type": "application/json",
+        //   },
+        //   body: JSON.stringify(currentUser),
+        // })
+        //   .then((res) => res.json())
+        //   .then((data) => {
+        //     console.log(data);
+        //     //ca; storage is not the best place to store jwt token
+        //     localStorage.setItem("geniusToken", data.token);
+        //     form.reset();
+        //     navigate(from, { replace: true });
+        //   });
       })
       .catch((error) => console.log(error));
+  };
+
+  const handleGoogleSignIn = () => {
+    googleSignIn()
+      .then((result) => {
+        const user = result.user;
+        console.log(user);
+        navigate(from, { replace: true });
+      })
+      .catch((error) => console.error(error));
   };
 
   return (
@@ -114,7 +137,8 @@ const Login = () => {
             </div>
             <div className="flex justify-center space-x-4 mb-[50px]">
               <button
-                aria-label="Log in with Facebook"
+                onClick={handleGoogleSignIn}
+                aria-label="Log in with Google"
                 className="p-3 rounded-sm"
               >
                 <svg
@@ -138,7 +162,7 @@ const Login = () => {
                 </svg>
               </button>
               <button
-                aria-label="Log in with Google"
+                aria-label="Log in with Github"
                 className="p-3 rounded-sm"
               >
                 <svg
@@ -160,6 +184,7 @@ const Login = () => {
                 Sign up
               </Link>
             </p>
+            <SocialLogin />
           </div>
         </div>
       </div>

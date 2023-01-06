@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 const OrderRow = ({ order, handleDelete, handleStatusUpdate }) => {
-  
   const { serviceName, phone, price, service, _id, customer, status } = order;
   const [orderService, setOrderService] = useState([]);
   useEffect(() => {
@@ -12,7 +11,7 @@ const OrderRow = ({ order, handleDelete, handleStatusUpdate }) => {
 
   return (
     <tr>
-      <th className="btnDelete-th">
+      <th className="btnDelete-th max-w-[60px]">
         <label>
           <button onClick={() => handleDelete(_id)} className="btn btn-circle">
             <svg
@@ -38,7 +37,7 @@ const OrderRow = ({ order, handleDelete, handleStatusUpdate }) => {
             <div className="mask rounded-md w-14 h-14">
               {orderService?.img && (
                 <img
-                  src={orderService.img}
+                  src={orderService?.img}
                   alt="Avatar Tailwind CSS Component"
                 />
               )}
@@ -57,8 +56,11 @@ const OrderRow = ({ order, handleDelete, handleStatusUpdate }) => {
       </td>
       <td>Purple</td>
       <th>
-        <button onClick={() => handleStatusUpdate(_id)} className="btn btn-ghost btn-xs">
-          {status ? status : "pending"}
+        <button
+          onClick={() => handleStatusUpdate(_id)}
+          className="btn btn-ghost btn-xs"
+        >
+          {status ? status : "Pending"}
         </button>
       </th>
     </tr>
